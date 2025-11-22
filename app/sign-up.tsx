@@ -13,6 +13,8 @@ import {
 import * as Yup from "yup";
 import { auth, db } from "../lib/firebase";
 
+import { MaterialIcons } from "@expo/vector-icons";
+
 interface SignUpFormValues {
   fullName: string;
   userName: string;
@@ -202,6 +204,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     flexGrow: 1,
     justifyContent: "center",
+  },
+  inputWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
   input: {
     borderWidth: 1,
