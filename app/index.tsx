@@ -21,7 +21,7 @@ const LandingPage = () => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => router.push("./employee-form")}
+        onPress={() => router.push("/employee-form")}
         style={styles.button}
       >
         <Text style={styles.buttonText}>Employee Form</Text>
