@@ -13,8 +13,6 @@ import {
 import * as Yup from "yup";
 import { auth, db } from "../lib/firebase";
 
-import { MaterialIcons } from "@expo/vector-icons";
-
 interface SignUpFormValues {
   fullName: string;
   userName: string;
