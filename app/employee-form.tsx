@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import React from "react";
+import * as Yup from "yup";
 import {
   ScrollView,
   StyleSheet,
@@ -11,6 +11,13 @@ import {
   View,
 } from "react-native";
 
+interface EmployeeFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  jobTitle: string;
+}
 
 const EmployeeSchema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
@@ -54,7 +61,7 @@ const EmployeeForm = () => {
           touched,
           errors,
         }) => (
-          <>
+          <View style={styles.form}>
             {/* First Name */}
             <TextInput
               style={styles.input}
@@ -78,3 +85,88 @@ const EmployeeForm = () => {
             {touched.lastName && errors.lastName && (
               <Text style={styles.error}>{errors.lastName}</Text>
             )}
+
+            {/* Email */}
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
+            {touched.email && errors.email && (
+              <Text style={styles.error}>{errors.email}</Text>
+            )}
+
+            {/* Phone */}
+            <TextInput
+              style={styles.input}
+              placeholder="Phone"
+              onChangeText={handleChange("phone")}
+              onBlur={handleBlur("phone")}
+              value={values.phone}
+            />
+            {touched.phone && errors.phone && (
+              <Text style={styles.error}>{errors.phone}</Text>
+            )}
+
+            {/* Job Title */}
+            <TextInput
+              style={styles.input}
+              placeholder="Job Title"
+              onChangeText={handleChange("jobTitle")}
+              onBlur={handleBlur("jobTitle")}
+              value={values.jobTitle}
+            />
+            {touched.jobTitle && errors.jobTitle && (
+              <Text style={styles.error}>{errors.jobTitle}</Text>
+            )}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleSubmit()}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  form: {
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  error: {
+    color: "red",
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+});
+
+export default EmployeeForm;
