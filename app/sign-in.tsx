@@ -13,8 +13,6 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../lib/firebase";
 
-import { MaterialIcons } from "@expo/vector-icons";
-
 interface SignInFormValues {
   email: string;
   password: string;
@@ -121,16 +119,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
   },
-  inputWrapper: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
   input: {
     height: 50,
     width: "100%",
@@ -139,7 +127,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 10,
-    flex: 1,
   },
   error: {
     color: "red",
