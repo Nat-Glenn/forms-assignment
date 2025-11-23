@@ -50,17 +50,14 @@ const SignUp = () => {
       setIsLoading(true);
       setFirebaseError(null);
 
-      // Create user account
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         values.email,
         values.password
       );
 
-      // Redirect immediately after successful user creation
       router.replace("/dashboard");
 
-      // Try to save additional user data (optional, don't block redirect)
       try {
         await setDoc(doc(db, "users", userCredentials.user.uid), {
           fullName: values.fullName,

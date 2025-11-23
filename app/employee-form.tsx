@@ -28,10 +28,11 @@ const employeeSchema = Yup.object().shape({
 const EmployeeForm = () => {
     const router = useRouter();
 
-    const handleSubmitForm = (values: EmployeeFormValues) => {
-        console.log('Employee form submitted:', values);
-        Alert.alert('Success', 'Employee form submitted successfully');
-    };
+    const handleSubmitForm = (values, { resetForm }) => {
+    console.log("Employee form submitted:", values);
+    alert("Employee information submitted!");
+    resetForm();
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -51,11 +52,7 @@ const EmployeeForm = () => {
         role: '',
       }}
       validationSchema={employeeSchema}
-        onSubmit={(values, { resetForm }) => {
-    console.log("Employee form submitted:", values);
-    alert("Employee information submitted!");
-    resetForm();
-  }}
+        onSubmit={handleSubmitForm}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <>
