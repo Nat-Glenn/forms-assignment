@@ -4,6 +4,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {Ionicons} from '@expo/vector-icons';
 import {useRouter} from "expo-router";
+import { db, auth } from "../lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 interface EmployeeFormValues {
   fullName: string;
@@ -32,6 +34,18 @@ const EmployeeForm = () => {
     console.log("Employee form submitted:", values);
     alert("Employee information submitted!");
     resetForm();
+  };
+
+  const saveEmployee = async (values: any) => {
+    try {
+      await addDoc(collection(db, "employees"), {
+        ...values,
+        createdAt: new Date().toISOString(),
+      });
+      console.log("Employee saved!");
+    } catch (error) {
+      console.log("Error saving employee:", error);
+    }
   };
 
   return (
