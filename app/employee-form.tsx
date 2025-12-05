@@ -1,9 +1,19 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import {Ionicons} from '@expo/vector-icons';
-import {useRouter} from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { Formik } from "formik";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import * as Yup from "yup";
+import { useAuth } from "../hooks/useAuth";
+import { db } from "../lib/firebase";
 
 interface EmployeeFormValues {
   fullName: string;
@@ -15,56 +25,80 @@ interface EmployeeFormValues {
 }
 
 const employeeSchema = Yup.object().shape({
-  fullName: Yup.string().required('Full Name is required'),
-  employeeId: Yup.string().required('Employee ID is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    phone: Yup.string()
-    .min(10, 'Phone number must be at least 10 digits')
-    .required('Phone number is required'),
-  department: Yup.string().required('Department is required'),
-  role: Yup.string().required('Role is required'),
+  fullName: Yup.string().required("Full Name is required"),
+  employeeId: Yup.string().required("Employee ID is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  phone: Yup.string()
+    .min(10, "Phone number must be at least 10 digits")
+    .required("Phone number is required"),
+  department: Yup.string().required("Department is required"),
+  role: Yup.string().required("Role is required"),
 });
 
 const EmployeeForm = () => {
-    const router = useRouter();
-
-    const handleSubmitForm = (values, { resetForm }) => {
-    console.log("Employee form submitted:", values);
-    alert("Employee information submitted!");
-    resetForm();
-  };
+  const router = useRouter();
+  const { user } = useAuth();
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.card}>
-           <View style={styles.headerRow}>
-             <Ionicons name="person-circle" size={24} color="2563eb" />
-                <Text style={styles.title}>Employee Information</Text>
-           </View>
+      <View style={styles.card}>
+        <View style={styles.headerRow}>
+          <Ionicons name="person-circle" size={24} color="#2563eb" />
+          <Text style={styles.title}>Employee Information</Text>
+        </View>
 
         <Formik<EmployeeFormValues>
-      initialValues={{
-        fullName: '',
-        employeeId: '',
-        email: '',
-        phone: '',
-        department: '',
-        role: '',
-      }}
-      validationSchema={employeeSchema}
-        onSubmit={handleSubmitForm}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+          initialValues={{
+            fullName: "",
+            employeeId: "",
+            email: "",
+            phone: "",
+            department: "",
+            role: "",
+          }}
+          validationSchema={employeeSchema}
+          onSubmit={async (values, { resetForm }) => {
+            console.log("Formik onSubmit called with:", values);
+
+            try {
+              await addDoc(collection(db, "employees"), {
+                ...values,
+                userId: user?.uid ?? null,
+                createdAt: serverTimestamp(),
+              });
+
+              Alert.alert("Success", "Employee form submitted successfully");
+              resetForm();
+            } catch (error) {
+              console.error("Error saving employee:", error);
+              Alert.alert(
+                "Error",
+                "Could not submit employee data. Please try again."
+              );
+            }
+          }}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
             <>
-            <Text style={styles.label}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder='Enter full name'
-                onChangeText={handleChange('fullName')}
-                onBlur={handleBlur('fullName')}
+              <Text style={styles.label}>Full Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter full name"
+                onChangeText={handleChange("fullName")}
+                onBlur={handleBlur("fullName")}
                 value={values.fullName}
               />
-              {touched.fullName && errors.fullName && (<Text style={styles.error}>{errors.fullName}</Text>)}
+              {touched.fullName && errors.fullName && (
+                <Text style={styles.error}>{errors.fullName}</Text>
+              )}
 
               <Text style={styles.label}>Employee ID</Text>
               <TextInput
@@ -131,9 +165,14 @@ const EmployeeForm = () => {
 
               <TouchableOpacity
                 style={styles.submitButton}
-                onPress={() => handleSubmit()}
+                // Formik expects this function to be passed directly
+                onPress={handleSubmit as any}
               >
-                <Ionicons name="checkmark-circle-outline" size={20} color="#fff" />
+                <Ionicons
+                  name="checkmark-circle-outline"
+                  size={20}
+                  color="#fff"
+                />
                 <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
 
@@ -144,9 +183,9 @@ const EmployeeForm = () => {
                 <Text style={styles.backLinkText}>Go Back Home</Text>
               </TouchableOpacity>
             </>
-        )}
-      </Formik>
-    </View>
+          )}
+        </Formik>
+      </View>
     </ScrollView>
   );
 };

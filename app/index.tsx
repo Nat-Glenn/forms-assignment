@@ -1,12 +1,12 @@
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const LandingPage = () => {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welecome to our App</Text>
+      <Text style={styles.title}>Welcome to our App</Text>
 
       <TouchableOpacity
         onPress={() => router.push("/sign-in")}
@@ -25,6 +25,12 @@ const LandingPage = () => {
         style={styles.button}
       >
         <Text style={styles.buttonText}>Employee Form</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => router.push("/employee-list")}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>View Employees</Text>
       </TouchableOpacity>
     </View>
   );
