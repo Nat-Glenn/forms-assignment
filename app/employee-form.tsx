@@ -28,11 +28,11 @@ const employeeSchema = Yup.object().shape({
 const EmployeeForm = () => {
     const router = useRouter();
 
-    const handleSubmitForm = (values, { resetForm }) => {
-    console.log("Employee form submitted:", values);
-    alert("Employee information submitted!");
-    resetForm();
-  };
+    const handleSubmitForm = async (values, { resetForm }) => {
+      await saveEmployee(values);
+      alert("Employee saved to Firebase!");
+      resetForm();
+    };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
